@@ -15,7 +15,6 @@ URL: 		http://www.tildeslash.com/monit/
 Requires(post):		rpm-helper
 Requires(preun):	rpm-helper
 BuildRequires:	flex, bison, openssl-devel
-BuildRoot: 	%{_tmppath}/%{name}-buildroot
 
 %description
 Monit is a utility for managing and monitoring processes,
