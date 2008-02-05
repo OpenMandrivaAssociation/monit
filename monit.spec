@@ -1,6 +1,6 @@
 %define name	monit
-%define version	4.9
-%define release 2
+%define version	4.10.1
+%define release 1
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
@@ -38,11 +38,11 @@ actions in error situations.
         BINDIR=%{buildroot}%{_bindir} \
         MANDIR=%{buildroot}%{_mandir}/man1
 
-install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
-install -m 600 %{SOURCE1} %{buildroot}%{_sysconfdir}/monitrc
+%__install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
+%__install -m 600 %{SOURCE1} %{buildroot}%{_sysconfdir}/monitrc
 
-install -d -m 755 %{buildroot}%{_initrddir}
-install -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+%__install -d -m 755 %{buildroot}%{_initrddir}
+%__install -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 
 %post
 %_post_service %{name}
@@ -55,11 +55,9 @@ install -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 
 %files
 %defattr(-,root,root)
-%doc CHANGES.txt CONTRIBUTORS COPYING FAQ.txt LICENSE README README.SSL STATUS
+%doc CHANGES.txt CONTRIBUTORS COPYING FAQ.txt LICENSE README README.SSL STATUS doc/*.html
 %config(noreplace) %{_sysconfdir}/monitrc
 %dir %{_sysconfdir}/%{name}.d
 %{_initrddir}/%{name}
 %{_bindir}/%{name}
 %{_mandir}/man1/%{name}.1.*
-
-
