@@ -1,14 +1,13 @@
 %define name	monit
-%define version	4.10.1
+%define version	5.0.3
 %define release 1
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
 Version: 	%{version}
 Release: 	%mkrel %{release}
-License: 	GPL
-Source0: 	http://www.tildeslash.com/monit/dist/%{name}-%{version}.tar.bz2
-Source1:	monitrc
+License: 	GPLv3+
+Source0: 	http://mmonit.com/monit/dist/%{name}-%{version}.tar.gz
 Source2:	rc.monit
 Group: 		Monitoring
 URL: 		http://www.tildeslash.com/monit/
@@ -39,7 +38,7 @@ actions in error situations.
         MANDIR=%{buildroot}%{_mandir}/man1
 
 %__install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
-%__install -m 600 %{SOURCE1} %{buildroot}%{_sysconfdir}/monitrc
+%__install -m 600 monitrc %{buildroot}%{_sysconfdir}/monitrc
 
 %__install -d -m 755 %{buildroot}%{_initrddir}
 %__install -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
@@ -55,7 +54,7 @@ actions in error situations.
 
 %files
 %defattr(-,root,root)
-%doc CHANGES.txt CONTRIBUTORS COPYING FAQ.txt LICENSE README README.SSL STATUS doc/*.html
+%doc CHANGES.txt CONTRIBUTORS COPYING FAQ.txt LICENSE README README.SSL doc/*.html
 %config(noreplace) %{_sysconfdir}/monitrc
 %dir %{_sysconfdir}/%{name}.d
 %{_initrddir}/%{name}
