@@ -9,6 +9,9 @@ Release: 	%mkrel %{release}
 License: 	GPLv3+
 Source0: 	http://mmonit.com/monit/dist/%{name}-%{version}.tar.gz
 Source2:	rc.monit
+# Config tweaks: enable logging and include /etc/monit.d by default
+# AdamW 2010/01
+Patch0:		monit-5.0.3-config.patch
 Group: 		Monitoring
 URL: 		http://www.tildeslash.com/monit/
 Requires(post):		rpm-helper
@@ -24,6 +27,7 @@ actions in error situations.
 
 %prep
 %setup -q
+%patch0 -p1 -b .config
 
 %build
 %configure
