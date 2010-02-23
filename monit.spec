@@ -1,6 +1,6 @@
 %define name	monit
-%define version	5.0.3
-%define release 2
+%define version	5.1
+%define release 1
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
@@ -11,7 +11,7 @@ Source0: 	http://mmonit.com/monit/dist/%{name}-%{version}.tar.gz
 Source2:	rc.monit
 # Config tweaks: enable logging and include /etc/monit.d by default
 # AdamW 2010/01
-Patch0:		monit-5.0.3-config.patch
+Patch0:		monit-5.1-config.patch
 Group: 		Monitoring
 URL: 		http://www.tildeslash.com/monit/
 Requires(post):		rpm-helper
@@ -58,7 +58,7 @@ actions in error situations.
 
 %files
 %defattr(-,root,root)
-%doc CHANGES.txt CONTRIBUTORS COPYING FAQ.txt LICENSE README README.SSL doc/*.html
+%doc CHANGES.txt COPYING LICENSE README README.SSL doc/*.html
 %config(noreplace) %{_sysconfdir}/monitrc
 %dir %{_sysconfdir}/%{name}.d
 %{_initrddir}/%{name}
