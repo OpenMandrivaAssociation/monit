@@ -1,5 +1,5 @@
 %define name	monit
-%define version	5.1
+%define version	5.1.1
 %define release 1
 
 Summary: 	Process monitor and restart utility
