@@ -1,11 +1,11 @@
 %define name	monit
 %define version	5.1.1
-%define release 1
+%define rel 2
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
 Version: 	%{version}
-Release: 	%mkrel %{release}
+Release: 	%mkrel %{rel}
 License: 	GPLv3+
 Source0: 	http://mmonit.com/monit/dist/%{name}-%{version}.tar.gz
 Source2:	rc.monit
@@ -30,16 +30,13 @@ actions in error situations.
 %patch0 -p1 -b .config
 
 %build
-%configure
+%configure2_5x
 %make
 
 %install
 %__rm -rf %{buildroot}
 
-%makeinstall \
-        MODE_PROGS=755 \
-        BINDIR=%{buildroot}%{_bindir} \
-        MANDIR=%{buildroot}%{_mandir}/man1
+%makeinstall_std
 
 %__install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
 %__install -m 600 monitrc %{buildroot}%{_sysconfdir}/monitrc
