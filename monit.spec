@@ -1,6 +1,6 @@
 %define name	monit
 %define version	5.1.1
-%define rel 2
+%define rel 3
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
