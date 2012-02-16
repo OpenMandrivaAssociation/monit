@@ -1,6 +1,6 @@
 %define name	monit
-%define version	5.1.1
-%define rel 3
+%define version	5.3.2
+%define rel 1
 
 Summary: 	Process monitor and restart utility
 Name: 		%{name}
@@ -17,7 +17,6 @@ URL: 		http://www.tildeslash.com/monit/
 Requires(post):		rpm-helper
 Requires(preun):	rpm-helper
 BuildRequires:	flex, bison, openssl-devel
-BuildRoot: 	%{_tmppath}/%{name}-buildroot
 
 %description
 Monit is a utility for managing and monitoring processes,
@@ -34,8 +33,6 @@ actions in error situations.
 %make
 
 %install
-%__rm -rf %{buildroot}
-
 %makeinstall_std
 
 %__install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
@@ -50,12 +47,8 @@ actions in error situations.
 %preun
 %_preun_service %{name}
 
-%clean
-%__rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
-%doc CHANGES.txt COPYING LICENSE README README.SSL doc/*.html
+%doc COPYING README
 %config(noreplace) %{_sysconfdir}/monitrc
 %dir %{_sysconfdir}/%{name}.d
 %{_initrddir}/%{name}
