@@ -1,0 +1,20 @@
+diff --git a/monitrc b/monitrc
+index c2c698f..b405d2f 100644
+--- a/monitrc
++++ b/monitrc
+@@ -25,7 +25,7 @@ set daemon  60              # check services at 1-minute intervals
+ ## omitted, Monit will use 'user' facility by default. If you want to log to 
+ ## a standalone log file instead, specify the full path to the log file
+ #
+-# set logfile syslog facility log_daemon                       
++set logfile syslog facility log_daemon                       
+ #
+ #
+ ## Set the location of the Monit id file which stores the unique id for the
+@@ -242,5 +242,5 @@ set httpd port 2812 and
+ ## It is possible to include additional configuration parts from other files or
+ ## directories.
+ #
+-#  include /etc/monit.d/*
++include /etc/monit.d/*
+ #
