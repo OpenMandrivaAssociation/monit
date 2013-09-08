@@ -1,105 +1,77 @@
-%define name	monit
-%define version	5.3.2
-%define rel 1
+Name:           monit
+Version:        5.5.1
+Release:        1
+Summary:        Manages and monitors processes, files, directories and devices
+Group:		Monitoring
+License:        AGPLv3
+URL:            http://www.tildeslash.com/monit
+Source0:        http://www.tildeslash.com/monit/dist/monit-%{version}.tar.gz
+Source2:        monit.logrotate
+Source3:        monit.service
+Source4:        monit-logging-conf
 
-Summary: 	Process monitor and restart utility
-Name: 		%{name}
-Version: 	%{version}
-Release: 	%mkrel %{rel}
-License: 	GPLv3+
-Source0: 	http://mmonit.com/monit/dist/%{name}-%{version}.tar.gz
-Source2:	rc.monit
-# Config tweaks: enable logging and include /etc/monit.d by default
-# AdamW 2010/01
-Patch0:		monit-5.1-config.patch
-Group: 		Monitoring
-URL: 		http://www.tildeslash.com/monit/
-Requires(post):		rpm-helper
-Requires(preun):	rpm-helper
-BuildRequires:	flex, bison, openssl-devel
+BuildRequires: flex
+BuildRequires: openssl-devel
+BuildRequires: pam-devel
+BuildRequires: byacc
+Requires(post):  systemd
+Requires(post):  rpm-helper
+Requires(preun): rpm-helper
 
 %description
-Monit is a utility for managing and monitoring processes,
-files, directories and devices on a Unix system. Monit conducts
-automatic maintenance and repair and can execute meaningful causal
-actions in error situations.
+monit is a utility for managing and monitoring, processes, files, directories
+and devices on a UNIX system. Monit conducts automatic maintenance and repair
+and can execute meaningful causal actions in error situations.
 
 %prep
 %setup -q
-%patch0 -p1 -b .config
 
 %build
-%configure2_5x
+%configure2_5x --disable-static
 %make
 
 %install
 %makeinstall_std
 
-%__install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}.d
-%__install -m 600 monitrc %{buildroot}%{_sysconfdir}/monitrc
+install -p -D -m0600 monitrc %{buildroot}%{_sysconfdir}/monitrc
+install -p -D -m0755 monit %{buildroot}%{_bindir}/monit
 
-%__install -d -m 755 %{buildroot}%{_initrddir}
-%__install -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
+# Log file & logrotate config
+install -p -D -m0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/monit
+mkdir -p %{buildroot}%{_localstatedir}/log
+install -m0600 /dev/null %{buildroot}%{_localstatedir}/log/monit.log
+
+# systemd service file
+mkdir -p %{buildroot}%{_unitdir}
+install -m0644 %{SOURCE3} %{buildroot}%{_unitdir}/monit.service
+
+# Let's include some good defaults
+mkdir -p %{buildroot}%{_sysconfdir}/monit.d
+install -p -D -m0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/monit.d/logging
+
+%{__sed} -i 's/# set daemon  120.*/set daemon 60  # check services at 1-minute intervals/' \
+    %{buildroot}%{_sysconfdir}/monitrc
+
+%{__sed} -i 's/#  include \/etc\/monit.d\/\*/include \/etc\/monit.d\/\*/' \
+    %{buildroot}%{_sysconfdir}/monitrc
 
 %post
 %_post_service %{name}
+
+# Moving old style configuration file to upstream's default location
+[ -f %{_sysconfdir}/monit.conf ] &&
+    touch -r %{_sysconfdir}/monitrc %{_sysconfdir}/monit.conf &&
+    mv -f %{_sysconfdir}/monit.conf %{_sysconfdir}/monitrc 2> /dev/null || :
 
 %preun
 %_preun_service %{name}
 
 %files
-%doc COPYING README
+%doc CHANGES COPYING doc/PLATFORMS README
 %config(noreplace) %{_sysconfdir}/monitrc
-%dir %{_sysconfdir}/%{name}.d
-%{_initrddir}/%{name}
+%config(noreplace) %{_sysconfdir}/monit.d/logging
+%config(noreplace) %{_sysconfdir}/logrotate.d/monit
+%config %ghost %{_localstatedir}/log/monit.log
+%{_unitdir}/monit.service
 %{_bindir}/%{name}
-%{_mandir}/man1/%{name}.1.*
-
-
-%changelog
-* Thu Feb 16 2012 Alexander Khrukin <akhrukin@mandriva.org> 5.3.2-1mdv2011.0
-+ Revision: 775106
-- version update 5.3.2
-
-* Mon Dec 06 2010 Oden Eriksson <oeriksson@mandriva.com> 5.1.1-3mdv2011.0
-+ Revision: 612923
-- the mass rebuild of 2010.1 packages
-
-* Mon Apr 19 2010 Funda Wang <fwang@mandriva.org> 5.1.1-2mdv2010.1
-+ Revision: 536603
-- rebuidl
-
-* Thu Feb 25 2010 Lev Givon <lev@mandriva.org> 5.1.1-1mdv2010.1
-+ Revision: 511359
-- Update to 5.1.1.
-- Update to 5.1.
-
-* Thu Jan 28 2010 Adam Williamson <awilliamson@mandriva.org> 5.0.3-2mdv2010.1
-+ Revision: 497711
-- add config.patch to tweak config file: enable logging and include
-  files in /etc/monit.d by default
-- two tweaks to the initscript:
-  	+ tell it to actually run as a daemon
-  	+ monit should start after every other service in case it's set to
-  	  monitor any of them (thanks Scott Storck from monit ML)
-
-* Sat Aug 08 2009 Frederik Himpe <fhimpe@mandriva.org> 5.0.3-1mdv2010.0
-+ Revision: 411821
-- Update to new version 5.0.3
-- Use configuration file included in source tarball
-- Add LSB headers to init script
-
-* Tue Feb 05 2008 Lev Givon <lev@mandriva.org> 4.10.1-1mdv2008.1
-+ Revision: 162796
-- Update to 4.10.1.
-
-  + Olivier Blin <blino@mandriva.org>
-    - restore BuildRoot
-
-  + Thierry Vignaud <tv@mandriva.org>
-    - kill re-definition of %%buildroot on Pixel's request
-
-* Fri Dec 14 2007 Thierry Vignaud <tv@mandriva.org> 4.9-2mdv2008.1
-+ Revision: 119874
-- rebuild b/c of missing subpackage on ia32
-
+%{_mandir}/man1/monit.1*
