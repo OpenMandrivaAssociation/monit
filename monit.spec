@@ -1,6 +1,6 @@
 Name:           monit
 Version:        5.5.1
-Release:        1
+Release:        2
 Summary:        Manages and monitors processes, files, directories and devices
 Group:		Monitoring
 License:        AGPLv3
