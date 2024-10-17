@@ -4,7 +4,7 @@ Release:        2
 Summary:        Manages and monitors processes, files, directories and devices
 Group:		Monitoring
 License:        AGPLv3
-URL:            http://www.tildeslash.com/monit
+URL:            https://www.tildeslash.com/monit
 Source0:        http://www.tildeslash.com/monit/dist/monit-%{version}.tar.gz
 Source2:        monit.logrotate
 Source3:        monit.service
