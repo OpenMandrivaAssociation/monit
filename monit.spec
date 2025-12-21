@@ -10,6 +10,11 @@ Source2:        monit.logrotate
 Source3:        monit.service
 Source4:        monit-logging-conf
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires: flex
 BuildRequires: openssl-devel
 BuildRequires: pam-devel
